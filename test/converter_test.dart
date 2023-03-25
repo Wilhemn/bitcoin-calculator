@@ -43,6 +43,29 @@ void main() {
   });
 
 
+  group('validInput', () {
+
+    test('1 input should be false', () {
+      bool input = PriceConverter.validInput("1");
+      expect(input, isTrue);
+    });    
+    test('0 input should be false', () {
+      bool input = PriceConverter.validInput("0");
+      expect(input, isFalse);
+    });
+
+    test('-1 input should be false', () {
+      bool input = PriceConverter.validInput("-1");
+      expect(input, isFalse);
+    });
+
+    test('h input should be false', () {
+      bool input = PriceConverter.validInput("h");
+      expect(input, isFalse);
+    });
+
+  });
+
 }
 
 
