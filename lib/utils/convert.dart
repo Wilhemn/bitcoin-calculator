@@ -14,4 +14,12 @@ class PriceConverter{
     return (btc * 27560.30);
   }
 
+  static bool validInput(String userInput){
+    if(userInput.contains(RegExp(r'[a-zA-z]')) || !userInput.contains(RegExp(r'^[1-9][0-9]*$'))){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
 }
