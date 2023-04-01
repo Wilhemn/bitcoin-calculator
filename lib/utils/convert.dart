@@ -1,25 +1,29 @@
 class PriceConverter{
 
-  static double usdBtcConverter(double usd){
-    if(usd <= 0){
+  static double usdBtcConverter(double usd, double currPrice){
+    if(usd < 0){
       throw ArgumentError();
     }
-    return (usd * 0.000036);
+    double btc = currPrice;
+    double res = usd / btc;
+    return res;
   }
 
-  static double btcUsdConverter(double btc){
-    if(btc <= 0){
+  static double btcUsdConverter(double btc, double currPrice){
+    if(btc < 0){
       throw ArgumentError();
     }
-    return (btc * 27560.30);
+    double usd = currPrice;
+    double res = usd * btc;
+    return res;
   }
 
-  static bool validInput(String userInput){
-    if(userInput.contains(RegExp(r'[a-zA-z]')) || !userInput.contains(RegExp(r'^[1-9][0-9]*$'))){
-      return false;
-    }else{
-      return true;
-    }
+  static bool validUsdInput(String userInput){
+      return RegExp(r'^[0-9]\d*(\.\d{1,2})?$').hasMatch(userInput);
+  }
+
+  static bool validBtcInput(String userInput){
+      return RegExp(r'^[0-9]\d*(\.\d{1,8})?$').hasMatch(userInput);
   }
 
 }

@@ -2,6 +2,11 @@ import 'package:bitcoin_calculator/utils/convert.dart';
 import 'package:flutter/material.dart';
 
 class UsdBtc extends StatefulWidget {
+
+  final double price;
+  final bool error;
+  UsdBtc(this.price, this.error);
+
   @override
   _UsdBtcState createState() => _UsdBtcState();
 }
@@ -12,6 +17,7 @@ class _UsdBtcState extends State<UsdBtc> {
   bool valid = false;
   bool convert = false;
   double btc = 0;
+  int usingUsd = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,21 @@ class _UsdBtcState extends State<UsdBtc> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            Container(
+              child: widget.error? Align(alignment: Alignment.center,
+                child: Text("ERROR RETRIEVING DATA",
+                key: Key('error1'),
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20,
+                ),
+              ),
+              ): Text(''),
+            ), 
+
+            SizedBox(height: 20),
+
             Container(
               child: convert && valid? Align(alignment: Alignment.center,
                 child: Text("$btc BTC",
@@ -47,9 +68,8 @@ class _UsdBtcState extends State<UsdBtc> {
               ): Text(''),
             ),
 
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
+
             Container(
               height: 50,
               width: 350,
@@ -66,8 +86,10 @@ class _UsdBtcState extends State<UsdBtc> {
                 onChanged: (value) {
                   convert = false;
                   setState(() {
-                    if(valid = PriceConverter.validInput(value)){
-                      btc = PriceConverter.usdBtcConverter(double.parse(value));
+                    if(widget.price != null){
+                      if(valid = PriceConverter.validUsdInput(value)){
+                        btc = PriceConverter.usdBtcConverter(double.parse(value), widget.price);
+                      }
                     }
                   });
                 }
