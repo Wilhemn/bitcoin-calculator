@@ -1,5 +1,7 @@
+import 'package:bitcoin_calculator/config/globals.dart';
 import 'package:bitcoin_calculator/screens/btc_usd.dart';
 import 'package:bitcoin_calculator/screens/usd_btc.dart';
+import 'package:bitcoin_calculator/utils/retrieve.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget{
@@ -10,7 +12,33 @@ class MainScreen extends StatefulWidget{
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  Future<double> futurePrice;
+  double currPrice;
+  bool error = false;
+
   @override 
+  void initState() {
+    super.initState();
+    retrievedPrice();
+  }
+
+  Future<void> retrievedPrice() async {
+    try {
+      futurePrice = BitcoinApi.fetchPrice(httpClient);
+      var result = await futurePrice;
+      setState(() {
+        currPrice = result;
+        error = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = true;
+      });
+    }    
+  }
+
+
   Widget build(BuildContext context){
     return Scaffold(
       body: Center(
@@ -19,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             ElevatedButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UsdBtc()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => UsdBtc(currPrice, error)));
                 setState(() { });
               },
               child: Text(
@@ -44,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
 
             ElevatedButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BtcUsd()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BtcUsd(currPrice, error)));
                 setState(() { });
               },
               child: Text(
